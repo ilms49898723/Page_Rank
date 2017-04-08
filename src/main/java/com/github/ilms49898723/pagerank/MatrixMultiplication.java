@@ -58,6 +58,7 @@ public class MatrixMultiplication {
             mJ = in.readInt();
         }
     }
+
     private static class MatrixValue implements Writable {
         private int mMatrix;
         private int mIndex;

@@ -5,7 +5,7 @@ import org.apache.hadoop.util.GenericOptionsParser;
 import java.io.IOException;
 
 public class PageRank {
-    public static final int N = 10876;
+    public static final int N = 5;
     public static final int ROUND = 1;
     public static final double BETA = 0.8;
 
@@ -20,13 +20,14 @@ public class PageRank {
             Initializer.start("R");
             InputPreProcessor.start(args[0], "prematrix", "mapping");
             MatrixParser.start("prematrix", "matrixparse");
-            for (int i = 0; i < ROUND; ++i) {
-                MatrixMultiplication.start("matrixparse", "matrixmul");
-                Cleaner.remove("R");
-                RankUpdater.start("matrixmul", "R");
-                Cleaner.remove("matrixmul");
-            }
-            OutputPostProcessor.start("R", args[1], "mapping");
+            MatrixTrans.start("matrixparse", "matrixtrans");
+//            for (int i = 0; i < ROUND; ++i) {
+//                MatrixMultiplication.start("matrixparse", "matrixmul");
+//                Cleaner.remove("R");
+//                RankUpdater.start("matrixmul", "R");
+//                Cleaner.remove("matrixmul");
+//            }
+//            OutputPostProcessor.start("R", args[1], "mapping");
         } catch (IOException e) {
             e.printStackTrace();
         }
