@@ -112,12 +112,12 @@ public class MatrixMultiplication {
             int i = Integer.parseInt(tokens[1]);
             int j = Integer.parseInt(tokens[2]);
             double v = Double.parseDouble(tokens[3]);
-            for (int k = 0; k < PageRank.N; ++k) {
-                if (matrix == 0) {
-                    MatrixKey key = new MatrixKey(i, k);
-                    MatrixValue value = new MatrixValue(matrix, j, v);
-                    outputCollector.collect(key, value);
-                } else {
+            if (matrix == 0) {
+                MatrixKey key = new MatrixKey(i, 1);
+                MatrixValue value = new MatrixValue(matrix, j, v);
+                outputCollector.collect(key, value);
+            } else {
+                for (int k = 0; k < PageRank.N; ++k) {
                     MatrixKey key = new MatrixKey(k, j);
                     MatrixValue value = new MatrixValue(matrix, i, v);
                     outputCollector.collect(key, value);
