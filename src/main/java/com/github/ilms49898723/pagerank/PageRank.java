@@ -13,6 +13,7 @@ public class PageRank {
                 System.err.println("Usage: pagerank <in> <out>");
                 System.exit(1);
             }
+            Cleaner.start(args[1]);
             MatrixParser.start(args[0]);
         } catch (IOException e) {
             e.printStackTrace();
