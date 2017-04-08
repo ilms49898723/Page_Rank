@@ -31,7 +31,7 @@ public class PageRank {
                 MatrixMultiplication.start("matrixparse", "R", "matrixmul");
                 Cleaner.remove("R");
                 RankUpdater.start("matrixmul", "R");
-                Cleaner.remove("matrixmul");
+//                Cleaner.remove("matrixmul");
             }
             OutputPostProcessor.start("R", args[1], "mapping");
         } catch (IOException e) {
