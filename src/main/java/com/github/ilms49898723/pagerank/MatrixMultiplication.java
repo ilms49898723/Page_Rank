@@ -168,11 +168,11 @@ public class MatrixMultiplication {
                 ArrayList<MatrixValue> result = new ArrayList<>();
                 FileSystem fileSystem = FileSystem.get(new Configuration());
                 int fileIndex = 0;
-                while (true) {
-                    Path in = new Path("/user/root/R", generateFullName(fileIndex));
-                    if (!fileSystem.exists(in)) {
-                        break;
-                    }
+                while (fileIndex < 1) {
+                    Path in = new Path("R", "part-00000");
+//                    if (!fileSystem.exists(in)) {
+//                        break;
+//                    }
                     BufferedReader reader = new BufferedReader(
                             new InputStreamReader(fileSystem.open(in))
                     );
@@ -183,6 +183,7 @@ public class MatrixMultiplication {
                         double value = Double.parseDouble(tokens[3]);
                         result.add(new MatrixValue(1, index, value));
                     }
+                    ++fileIndex;
                 }
                 return result;
             } catch (IOException e) {
