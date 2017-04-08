@@ -18,4 +18,13 @@ public class Cleaner {
             e.printStackTrace();
         }
     }
+
+    public static void remove(String dir) {
+        try {
+            FileSystem fileSystem = FileSystem.get(new Configuration());
+            fileSystem.delete(new Path(dir), true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
