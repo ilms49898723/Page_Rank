@@ -11,18 +11,25 @@ public class MatrixMultiplication {
         try {
             double[] oldR = new double[PageRank.N];
             FileSystem fileSystem = FileSystem.get(new Configuration());
-            Path rIn = new Path(rInput, "R");
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(fileSystem.open(rIn))
-            );
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] tokens = line.split(",");
-                int index = Integer.parseInt(tokens[1]);
-                double value = Double.parseDouble(tokens[3]);
-                oldR[index] = value;
+            int rFileIndex = 0;
+            while (true) {
+                Path rIn = new Path(rInput, generateFullName(rFileIndex));
+                if (!fileSystem.exists(rIn)) {
+                    break;
+                }
+                BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(fileSystem.open(rIn))
+                );
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    String[] tokens = line.split(",");
+                    int index = Integer.parseInt(tokens[1]);
+                    double value = Double.parseDouble(tokens[3]);
+                    oldR[index] = value;
+                }
+                reader.close();
+                ++rFileIndex;
             }
-            reader.close();
             Path out = new Path(output, output);
             BufferedWriter writer = new BufferedWriter(
                     new OutputStreamWriter(fileSystem.create(out, true))
@@ -30,12 +37,13 @@ public class MatrixMultiplication {
             int fileIndex = 0;
             while (true) {
                 Path in = new Path(input, generateFullName(fileIndex));
-                if (fileIndex > 10) {
+                if (!fileSystem.exists(in)) {
                     break;
                 }
-                reader = new BufferedReader(
+                BufferedReader reader = new BufferedReader(
                         new InputStreamReader(fileSystem.open(in))
                 );
+                String line;
                 while ((line = reader.readLine()) != null) {
                     double sum = 0.0;
                     String[] tokens = line.split(",");
