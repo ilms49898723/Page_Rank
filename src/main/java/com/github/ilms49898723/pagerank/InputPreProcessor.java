@@ -72,6 +72,8 @@ public class InputPreProcessor {
     private static int remap(HashMap<Integer, Integer> mapping, int src) {
         if (src >= 0 && src < PageRank.N) {
             return mapping.get(src);
+        } else if (mapping.containsKey(src)) {
+            return mapping.get(src);
         } else {
             for (int i = 0; i < PageRank.N; ++i) {
                 if (!mapping.containsKey(i)) {
