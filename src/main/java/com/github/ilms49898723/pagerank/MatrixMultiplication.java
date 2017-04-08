@@ -30,9 +30,9 @@ public class MatrixMultiplication {
             int fileIndex = 0;
             while (true) {
                 Path in = new Path(input, generateFullName(fileIndex));
-                if (!fileSystem.exists(in)) {
-                    break;
-                }
+//                if (!fileSystem.exists(in)) {
+//                    break;
+//                }
                 reader = new BufferedReader(
                         new InputStreamReader(fileSystem.open(in))
                 );
