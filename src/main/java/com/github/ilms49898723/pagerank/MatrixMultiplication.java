@@ -25,7 +25,7 @@ public class MatrixMultiplication {
             reader.close();
             Path out = new Path(output, output);
             BufferedWriter writer = new BufferedWriter(
-                    new OutputStreamWriter(fileSystem.create(out))
+                    new OutputStreamWriter(fileSystem.create(out, true))
             );
             int fileIndex = 0;
             while (true) {
@@ -51,6 +51,7 @@ public class MatrixMultiplication {
                     writer.write("R," + column + ",0," + sum + "\n");
                 }
                 ++fileIndex;
+                reader.close();
             }
             writer.close();
         } catch (IOException e) {
