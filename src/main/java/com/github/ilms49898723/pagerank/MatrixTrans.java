@@ -97,7 +97,7 @@ public class MatrixTrans {
         jobConf.setJobName("Matrix Trans");
         jobConf.setJarByClass(PageRank.class);
         jobConf.setMapOutputKeyClass(IntWritable.class);
-        jobConf.setMapOutputValueClass(IntWritable.class);
+        jobConf.setMapOutputValueClass(MatrixValue.class);
         jobConf.setOutputKeyClass(ObjectWritable.class);
         jobConf.setOutputValueClass(Text.class);
         jobConf.setMapperClass(MatrixMapper.class);

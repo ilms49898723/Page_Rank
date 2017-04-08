@@ -13,6 +13,7 @@ public class Cleaner {
             fileSystem.delete(new Path(output), true);
             fileSystem.delete(new Path("/user/root/prematrix"), true);
             fileSystem.delete(new Path("/user/root/matrixparse"), true);
+            fileSystem.delete(new Path("/user/root/matrixtrans"), true);
             fileSystem.delete(new Path("/user/root/matrixmul"), true);
             fileSystem.delete(new Path("/user/root/mapping"), true);
             fileSystem.delete(new Path("/user/root/R"), true);
