@@ -11,14 +11,14 @@ import java.io.OutputStreamWriter;
 public class Initializer {
     private static final long N = 5;
     public static void start() {
-        Path path = new Path("R");
+        Path path = new Path("R", "R");
         try {
             FileSystem fileSystem = FileSystem.get(new Configuration());
             BufferedWriter writer = new BufferedWriter(
                     new OutputStreamWriter(fileSystem.create(path, true))
             );
             for (long i = 1; i <= N; ++i) {
-                writer.write("N," + i + ",1," + ((float) 1 / N));
+                writer.write("N," + i + ",1," + ((float) 1 / N) + "\n");
             }
             writer.close();
         } catch (IOException e) {
