@@ -11,8 +11,8 @@ public class InputPreProcessor {
     public static void start(String input, String output, String mapOut) {
         HashMap<Integer, Integer> mapping = new HashMap<>();
         Path in = new Path(input);
-        Path out = new Path(output);
-        Path map = new Path(mapOut);
+        Path out = new Path(output, output);
+        Path map = new Path(mapOut, mapOut);
         try {
             FileSystem fileSystem = FileSystem.get(new Configuration());
             BufferedReader reader = new BufferedReader(
@@ -63,6 +63,7 @@ public class InputPreProcessor {
                     writer.write(mapping.get(key) + " " + key + "\n");
                 }
             }
+            writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
