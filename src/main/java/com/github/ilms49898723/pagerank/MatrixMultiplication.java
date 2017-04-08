@@ -126,7 +126,7 @@ public class MatrixMultiplication {
                 MatrixValue value = new MatrixValue(matrix, j, v);
                 outputCollector.collect(key, value);
             } else {
-                for (int k = 1; k <= PageRank.N; ++k) {
+                for (int k = 0; k < PageRank.N; ++k) {
                     MatrixKey key = new MatrixKey(k, j);
                     MatrixValue value = new MatrixValue(matrix, i, v);
                     outputCollector.collect(key, value);
