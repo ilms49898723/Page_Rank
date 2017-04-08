@@ -67,8 +67,8 @@ public class MatrixTrans {
             int i = Integer.parseInt(tokens[1]);
             int j = Integer.parseInt(tokens[2]);
             double v = Double.parseDouble(tokens[3]);
-            IntWritable key = new IntWritable(j);
-            MatrixValue value = new MatrixValue(i, v);
+            IntWritable key = new IntWritable(i);
+            MatrixValue value = new MatrixValue(j, v);
             outputCollector.collect(key, value);
         }
     }
