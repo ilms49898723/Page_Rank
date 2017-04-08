@@ -9,9 +9,8 @@ import java.util.HashMap;
 
 public class OutputPostProcessor {
     public static void start(String input, String output, String mapIn) {
-        Path in = new Path(input);
         Path out = new Path(output, output);
-        Path map = new Path(mapIn);
+        Path map = new Path(mapIn, mapIn);
         try {
             HashMap<Integer, Integer> mapping = new HashMap<>();
             FileSystem fileSystem = FileSystem.get(new Configuration());
@@ -24,20 +23,28 @@ public class OutputPostProcessor {
                 mapping.put(Integer.parseInt(tokens[0]), Integer.parseInt(tokens[1]));
             }
             reader.close();
-            reader = new BufferedReader(
-                    new InputStreamReader(fileSystem.open(in))
-            );
             BufferedWriter writer = new BufferedWriter(
                     new OutputStreamWriter(fileSystem.create(out, true))
             );
-            while ((line = reader.readLine()) != null) {
-                // R,0,0,1.0
-                String[] tokens = line.split(",");
-                int index = Integer.parseInt(tokens[1]);
-                int newIndex = remap(mapping, index);
-                writer.write(newIndex + " " + tokens[3] + "\n");
+            int fileIndex = 0;
+            while (true) {
+                Path in = new Path(input, generateFullName(fileIndex));
+                if (!fileSystem.exists(in)) {
+                    break;
+                }
+                reader = new BufferedReader(
+                        new InputStreamReader(fileSystem.open(in))
+                );
+                while ((line = reader.readLine()) != null) {
+                    // R,0,0,1.0
+                    String[] tokens = line.split(",");
+                    int index = Integer.parseInt(tokens[1]);
+                    int newIndex = remap(mapping, index);
+                    writer.write(newIndex + " " + tokens[3] + "\n");
+                }
+                reader.close();
+                ++fileIndex;
             }
-            reader.close();
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -50,5 +57,14 @@ public class OutputPostProcessor {
         } else {
             return src;
         }
+    }
+
+    private static String generateFullName(int index) {
+        String indexPart = "";
+        for (int i = 0; i < 5 - Integer.valueOf(index).toString().length(); ++i) {
+            indexPart += "0";
+        }
+        indexPart += index;
+        return "part-" + indexPart;
     }
 }
