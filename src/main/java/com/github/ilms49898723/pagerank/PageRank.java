@@ -22,7 +22,7 @@ public class PageRank {
             MatrixParser.start("prematrix", "matrixparse");
             MatrixTrans.start("matrixparse", "matrixtrans");
             for (int i = 0; i < ROUND; ++i) {
-                MatrixMultiplication.start("matrixparse", "R", "matrixmul");
+                MatrixMultiplication.start("matrixtrans", "R", "matrixmul");
                 Cleaner.remove("R");
                 RankUpdater.start("matrixmul", "R");
                 Cleaner.remove("matrixmul");
