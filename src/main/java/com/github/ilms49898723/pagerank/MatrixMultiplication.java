@@ -165,7 +165,7 @@ public class MatrixMultiplication {
                 FileSystem fileSystem = FileSystem.get(new Configuration());
                 int fileIndex = 0;
                 while (true) {
-                    Path in = new Path(generateFullName(fileIndex));
+                    Path in = new Path("R", generateFullName(fileIndex));
                     if (!fileSystem.exists(in)) {
                         break;
                     }
