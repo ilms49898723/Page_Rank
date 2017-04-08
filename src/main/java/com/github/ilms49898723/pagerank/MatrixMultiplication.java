@@ -1,7 +1,10 @@
 package com.github.ilms49898723.pagerank;
 
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.*;
+import org.apache.hadoop.io.ObjectWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.Writable;
+import org.apache.hadoop.io.WritableComparable;
 import org.apache.hadoop.mapred.*;
 
 import java.io.DataInput;
@@ -149,11 +152,14 @@ public class MatrixMultiplication {
                     values2.add(value);
                 }
             }
+            values1.sort((o1, o2) -> Integer.compare(o1.getIndex(), o2.getIndex()));
+            int val2Index = 0;
             for (MatrixValue value1 : values1) {
-                for (MatrixValue value2 : values2) {
-                    if (value1.getIndex() == value2.getIndex()) {
-                        sum += value1.getValue() * value2.getValue();
-                    }
+                while (values2.get(val2Index).getIndex() < value1.getIndex()) {
+                    ++val2Index;
+                }
+                if (value1.getIndex() == values2.get(val2Index).getIndex()) {
+                    sum += value1.getValue() * values2.get(val2Index).getValue();
                 }
             }
             sum = sum * PageRank.BETA + (1.0 - PageRank.BETA) / PageRank.N;
