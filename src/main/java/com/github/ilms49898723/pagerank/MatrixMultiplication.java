@@ -209,6 +209,7 @@ public class MatrixMultiplication {
         jobConf.setReducerClass(MatrixReducer.class);
         jobConf.setInputFormat(TextInputFormat.class);
         jobConf.setOutputFormat(TextOutputFormat.class);
+        jobConf.setWorkingDirectory(new Path("/user/root"));
         FileInputFormat.setInputPaths(jobConf, new Path(input));
         FileOutputFormat.setOutputPath(jobConf, new Path(output));
         try {
