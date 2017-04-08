@@ -7,7 +7,6 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapred.*;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -16,15 +15,15 @@ public class RankUpdater {
     private static class MatrixValue {
         private int mI;
         private int mJ;
-        private String mValue;
+        private double mValue;
 
         public MatrixValue() {
             mI = -1;
             mJ = -1;
-            mValue = "-1";
+            mValue = -1.0;
         }
 
-        public MatrixValue(int i, int j, String v) {
+        public MatrixValue(int i, int j, double v) {
             mI = i;
             mJ = j;
             mValue = v;
@@ -38,11 +37,11 @@ public class RankUpdater {
             return mJ;
         }
 
-        public String getValue() {
+        public double getValue() {
             return mValue;
         }
 
-        public void setValue(String value) {
+        public void setValue(double value) {
             mValue = value;
         }
     }
@@ -62,28 +61,20 @@ public class RankUpdater {
         @Override
         public void reduce(IntWritable intWritable, Iterator<Text> iterator, OutputCollector<ObjectWritable, Text> outputCollector, Reporter reporter) throws IOException {
             List<MatrixValue> values = new ArrayList<>();
-            BigDecimal sum = new BigDecimal("0.0");
+            double sum = 0.0;
             while (iterator.hasNext()) {
                 String data = new Text(iterator.next()).toString();
                 String[] tokens = data.split(",");
                 int i = Integer.parseInt(tokens[1]);
                 int j = Integer.parseInt(tokens[2]);
-                String v = tokens[3];
+                double v = Double.parseDouble(tokens[3]);
                 values.add(new MatrixValue(i, j, v));
-                sum = sum.add(new BigDecimal(v));
+                sum += v;
             }
             for (MatrixValue value : values) {
-                BigDecimal newValue = new BigDecimal(value.getValue());
-                if (newValue.compareTo(new BigDecimal("-1.0")) < 0) {
-                    throw new IOException("value goes negative");
-                }
-                BigDecimal oneMinusSum = new BigDecimal(1.0).subtract(sum);
-                BigDecimal divide = oneMinusSum.divide(new BigDecimal(PageRank.N), BigDecimal.ROUND_HALF_EVEN);
-                newValue = newValue.add(new BigDecimal(1.0).subtract(sum).divide(new BigDecimal(PageRank.N), BigDecimal.ROUND_HALF_EVEN));
-                if (newValue.compareTo(new BigDecimal("-1.0")) < 0) {
-                    throw new IOException("value goes negative 2\nsum " + sum + "\n1-s " + oneMinusSum + "\n(1-s)/n " + divide + "\n");
-                }
-                value.setValue(newValue.toString());
+                double newValue = value.getValue();
+                newValue = newValue + (1.0 - sum) / PageRank.N;
+                value.setValue(newValue);
                 String output = "R," + value.getI() + "," + value.getJ() + "," + value.getValue();
                 outputCollector.collect(null, new Text(output));
             }

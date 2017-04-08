@@ -1,13 +1,15 @@
 package com.github.ilms49898723.pagerank;
 
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.*;
+import org.apache.hadoop.io.ObjectWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.Writable;
+import org.apache.hadoop.io.WritableComparable;
 import org.apache.hadoop.mapred.*;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -59,15 +61,15 @@ public class MatrixMultiplication {
     private static class MatrixValue implements Writable {
         private int mMatrix;
         private int mIndex;
-        private String mValue;
+        private double mValue;
 
         public MatrixValue() {
             mMatrix = -1;
             mIndex = -1;
-            mValue = "-1";
+            mValue = -1.0;
         }
 
-        public MatrixValue(int matrix, int index, String value) {
+        public MatrixValue(int matrix, int index, double value) {
             mMatrix = matrix;
             mIndex = index;
             mValue = value;
@@ -81,7 +83,7 @@ public class MatrixMultiplication {
             return mIndex;
         }
 
-        public String getValue() {
+        public double getValue() {
             return mValue;
         }
 
@@ -89,14 +91,14 @@ public class MatrixMultiplication {
         public void write(DataOutput out) throws IOException {
             out.writeInt(mMatrix);
             out.writeInt(mIndex);
-            out.writeUTF(mValue);
+            out.writeDouble(mValue);
         }
 
         @Override
         public void readFields(DataInput in) throws IOException {
             mMatrix = in.readInt();
             mIndex = in.readInt();
-            mValue = in.readUTF();
+            mValue = in.readDouble();
         }
 
         @Override
@@ -118,7 +120,7 @@ public class MatrixMultiplication {
             int matrix = (tokens[0].equalsIgnoreCase("m")) ? 0 : 1;
             int i = Integer.parseInt(tokens[1]);
             int j = Integer.parseInt(tokens[2]);
-            String v = tokens[3];
+            double v = Double.parseDouble(tokens[3]);
             if (matrix == 0) {
                 MatrixKey key = new MatrixKey(i, 0);
                 MatrixValue value = new MatrixValue(matrix, j, v);
@@ -138,7 +140,7 @@ public class MatrixMultiplication {
             implements Reducer<MatrixKey, MatrixValue, ObjectWritable, Text> {
         @Override
         public void reduce(MatrixKey matrixKey, Iterator<MatrixValue> iterator, OutputCollector<ObjectWritable, Text> outputCollector, Reporter reporter) throws IOException {
-            BigDecimal sum = new BigDecimal(0.0);
+            double sum = 0.0;
             List<MatrixValue> values1 = new ArrayList<>();
             List<MatrixValue> values2 = new ArrayList<>();
             while (iterator.hasNext()) {
@@ -153,18 +155,13 @@ public class MatrixMultiplication {
             for (MatrixValue value1 : values1) {
                 for (MatrixValue value2 : values2) {
                     if (value1.getIndex() == value2.getIndex()) {
-                        BigDecimal left = new BigDecimal(value1.getValue());
-                        BigDecimal right = new BigDecimal(value2.getValue());
-                        sum = sum.add(left.multiply(right));
+                        sum += value1.getValue() * value2.getValue();
                     }
                 }
             }
-            sum = sum.multiply(new BigDecimal("0.8")).add(new BigDecimal((1 - PageRank.BETA) / PageRank.N));
+            sum = PageRank.BETA * sum + (1.0 - PageRank.BETA) / PageRank.N;
             if (matrixKey.getI() == 1) {
-                throw new IOException(sum.toString());
-            }
-            if (sum.compareTo(new BigDecimal("-1.0")) < 0) {
-                throw new IOException("sum goes negative");
+                throw new IOException(String.valueOf(sum));
             }
             String output = "R," + matrixKey.getI() + "," + matrixKey.getJ() + "," + sum;
             outputCollector.collect(null, new Text(output));
