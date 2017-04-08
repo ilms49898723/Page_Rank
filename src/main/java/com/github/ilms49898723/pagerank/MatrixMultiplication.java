@@ -114,9 +114,6 @@ public class MatrixMultiplication {
         @Override
         public void map(Object o, Text text, OutputCollector<MatrixKey, MatrixValue> outputCollector, Reporter reporter) throws IOException {
             String[] tokens = text.toString().split(",");
-            if (tokens.length != 4) {
-                throw new IOException("Length of tokens should be 2. Got " + tokens.length);
-            }
             int matrix = (tokens[0].equalsIgnoreCase("m")) ? 0 : 1;
             int i = Integer.parseInt(tokens[1]);
             int j = Integer.parseInt(tokens[2]);
@@ -165,7 +162,7 @@ public class MatrixMultiplication {
         }
     }
 
-    public static void start() {
+    public static void start(String input, String rInput, String output) {
         JobConf jobConf = new JobConf();
         jobConf.setJobName("Matrix Multiplication");
         jobConf.setJarByClass(PageRank.class);
@@ -177,8 +174,8 @@ public class MatrixMultiplication {
         jobConf.setReducerClass(MatrixReducer.class);
         jobConf.setInputFormat(TextInputFormat.class);
         jobConf.setOutputFormat(TextOutputFormat.class);
-        FileInputFormat.setInputPaths(jobConf, new Path("matrixparse"), new Path("R"));
-        FileOutputFormat.setOutputPath(jobConf, new Path("matrixmul"));
+        FileInputFormat.setInputPaths(jobConf, new Path(input), new Path(rInput));
+        FileOutputFormat.setOutputPath(jobConf, new Path(output));
         try {
             JobClient.runJob(jobConf);
         } catch (IOException e) {

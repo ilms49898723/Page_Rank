@@ -72,14 +72,14 @@ public class RankUpdater {
                 sum += v;
             }
             for (MatrixValue value : values) {
-                value.setValue(value.getValue() + (1 - sum) / PageRank.N);
+                value.setValue(value.getValue() + (1.0 - sum) / PageRank.N);
                 String output = "R," + value.getI() + "," + value.getJ() + "," + value.getValue();
                 outputCollector.collect(null, new Text(output));
             }
         }
     }
 
-    public static void start() {
+    public static void start(String input, String output) {
         JobConf jobConf = new JobConf();
         jobConf.setJobName("Matrix Multiplication");
         jobConf.setJarByClass(PageRank.class);
@@ -91,8 +91,8 @@ public class RankUpdater {
         jobConf.setReducerClass(RankReducer.class);
         jobConf.setInputFormat(TextInputFormat.class);
         jobConf.setOutputFormat(TextOutputFormat.class);
-        FileInputFormat.setInputPaths(jobConf, new Path("matrixmul"));
-        FileOutputFormat.setOutputPath(jobConf, new Path("R"));
+        FileInputFormat.setInputPaths(jobConf, new Path(input));
+        FileOutputFormat.setOutputPath(jobConf, new Path(output));
         try {
             JobClient.runJob(jobConf);
         } catch (IOException e) {

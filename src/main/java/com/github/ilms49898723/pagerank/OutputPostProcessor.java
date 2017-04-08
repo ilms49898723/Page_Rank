@@ -36,7 +36,6 @@ public class OutputPostProcessor {
                         new InputStreamReader(fileSystem.open(in))
                 );
                 while ((line = reader.readLine()) != null) {
-                    // R,0,0,1.0
                     String[] tokens = line.split(",");
                     int index = Integer.parseInt(tokens[1]);
                     int newIndex = remap(mapping, index);

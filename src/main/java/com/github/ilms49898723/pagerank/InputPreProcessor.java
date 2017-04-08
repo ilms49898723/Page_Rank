@@ -45,13 +45,14 @@ public class InputPreProcessor {
                     continue;
                 }
                 String[] tokens = line.split("\\s+");
-                if (tokens.length == 2) {
-                    int a = Integer.parseInt(tokens[0]);
-                    int b = Integer.parseInt(tokens[1]);
-                    int newA = remap(mapping, a);
-                    int newB = remap(mapping, b);
-                    writer.write(newA + " " + newB + "\n");
+                int a = Integer.parseInt(tokens[0]);
+                int b = Integer.parseInt(tokens[1]);
+                int newA = remap(mapping, a);
+                int newB = remap(mapping, b);
+                if (newA == -1 || newB == -1) {
+                    throw new IOException("Remap error! PageRank.N is too small!");
                 }
+                writer.write(newA + " " + newB + "\n");
             }
             reader.close();
             writer.close();
@@ -71,7 +72,7 @@ public class InputPreProcessor {
 
     private static int remap(HashMap<Integer, Integer> mapping, int src) {
         if (src >= 0 && src < PageRank.N) {
-            return mapping.get(src);
+            return src;
         } else if (mapping.containsKey(src)) {
             return mapping.get(src);
         } else {

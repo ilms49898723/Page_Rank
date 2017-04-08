@@ -21,9 +21,6 @@ public class MatrixParser {
                 return;
             }
             String[] tokens = text.toString().split("\\s+");
-            if (tokens.length != 2) {
-                throw new IOException("Length of tokens should be 2. Got " + tokens.length);
-            }
             IntWritable key = new IntWritable(Integer.parseInt(tokens[0]));
             IntWritable value = new IntWritable(Integer.parseInt(tokens[1]));
             outputCollector.collect(key, value);

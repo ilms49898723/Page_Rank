@@ -16,17 +16,13 @@ public class PageRank {
                 System.exit(1);
             }
             Cleaner.start(args[1]);
-            Initializer.start();
+            Initializer.start("R");
             InputPreProcessor.start(args[0], "prematrix", "mapping");
-            // in: args[0]; out: matrixparse
             MatrixParser.start("prematrix", "matrixparse");
             for (int i = 0; i < ROUND; ++i) {
-                // in: matrixparse, R; out: matrixmul
-                MatrixMultiplication.start();
-                // remove R
+                MatrixMultiplication.start("matrixparse", "R", "matrixmul");
                 Cleaner.remove("R");
-                // in: matrixmul; out: R
-                RankUpdater.start();
+                RankUpdater.start("matrixmul", "R");
                 Cleaner.remove("matrixmul");
             }
             OutputPostProcessor.start("R", args[1], "mapping");
