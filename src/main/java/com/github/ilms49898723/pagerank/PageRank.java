@@ -5,7 +5,7 @@ import org.apache.hadoop.util.GenericOptionsParser;
 import java.io.IOException;
 
 public class PageRank {
-    public static int N = 5;
+    public static int N = 10876;
     public static int ROUND = 1;
     public static double BETA = 0.8;
 
