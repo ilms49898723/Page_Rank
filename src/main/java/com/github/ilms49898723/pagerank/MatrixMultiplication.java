@@ -160,6 +160,9 @@ public class MatrixMultiplication {
                 }
             }
             sum = sum.multiply(new BigDecimal("0.8")).add(new BigDecimal((1 - PageRank.BETA) / PageRank.N));
+            if (matrixKey.getI() == 1) {
+                throw new IOException(sum.toString());
+            }
             if (sum.compareTo(new BigDecimal("-1.0")) < 0) {
                 throw new IOException("sum goes negative");
             }
