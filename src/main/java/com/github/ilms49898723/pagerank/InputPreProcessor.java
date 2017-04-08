@@ -76,6 +76,7 @@ public class InputPreProcessor {
             for (int i = 0; i < PageRank.N; ++i) {
                 if (!mapping.containsKey(i)) {
                     mapping.put(src, i);
+                    mapping.put(i, -1);
                     return i;
                 }
             }
