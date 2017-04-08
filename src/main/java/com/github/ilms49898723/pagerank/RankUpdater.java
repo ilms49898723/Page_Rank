@@ -71,11 +71,6 @@ public class RankUpdater {
                 values.add(new MatrixValue(i, j, v));
                 sum += v;
             }
-            if (Math.abs(1.0 - sum) > 1e-4) {
-                for (MatrixValue value : values) {
-                    value.setValue(value.getValue() + (1 - sum) / PageRank.N);
-                }
-            }
             for (MatrixValue value : values) {
                 String output = "R," + value.getI() + "," + value.getJ() + "," + value.getValue();
                 outputCollector.collect(null, new Text(output));
