@@ -140,7 +140,9 @@ public class MatrixMultiplication {
                 values.add(value);
                 out += value;
             }
-            throw new IOException(out);
+            if (matrixKey.getI() == 1) {
+                throw new IOException(out);
+            }
             for (MatrixValue i : values) {
                 for (MatrixValue j : values) {
                     if (i.getMatrix() != j.getMatrix() && i.getIndex() == j.getIndex()) {
