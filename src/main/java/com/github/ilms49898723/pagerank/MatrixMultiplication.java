@@ -51,8 +51,8 @@ public class MatrixMultiplication {
                     int size = Integer.parseInt(tokens[2]);
                     int searchIndex = 3;
                     for (int i = 0; i < size; ++i, searchIndex += 2) {
-                        int index = Integer.parseInt(tokens[i]);
-                        double value = Double.parseDouble(tokens[i + 1]);
+                        int index = Integer.parseInt(tokens[searchIndex]);
+                        double value = Double.parseDouble(tokens[searchIndex + 1]);
                         sum += oldR[index] * value;
                     }
                     sum = sum * PageRank.BETA + (1.0 - PageRank.BETA) / PageRank.N;
