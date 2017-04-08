@@ -1,5 +1,7 @@
 package com.github.ilms49898723.pagerank;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.ObjectWritable;
 import org.apache.hadoop.io.Text;
@@ -7,9 +9,7 @@ import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.io.WritableComparable;
 import org.apache.hadoop.mapred.*;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -121,17 +121,9 @@ public class MatrixMultiplication {
             int i = Integer.parseInt(tokens[1]);
             int j = Integer.parseInt(tokens[2]);
             double v = Double.parseDouble(tokens[3]);
-            if (matrix == 0) {
-                MatrixKey key = new MatrixKey(i, 0);
-                MatrixValue value = new MatrixValue(matrix, j, v);
-                outputCollector.collect(key, value);
-            } else {
-                for (int k = 0; k < PageRank.N; ++k) {
-                    MatrixKey key = new MatrixKey(k, j);
-                    MatrixValue value = new MatrixValue(matrix, i, v);
-                    outputCollector.collect(key, value);
-                }
-            }
+            MatrixKey key = new MatrixKey(i, 0);
+            MatrixValue value = new MatrixValue(matrix, j, v);
+            outputCollector.collect(key, value);
         }
     }
 
@@ -142,15 +134,14 @@ public class MatrixMultiplication {
         public void reduce(MatrixKey matrixKey, Iterator<MatrixValue> iterator, OutputCollector<ObjectWritable, Text> outputCollector, Reporter reporter) throws IOException {
             double sum = 0.0;
             List<MatrixValue> values1 = new ArrayList<>();
-            List<MatrixValue> values2 = new ArrayList<>();
+            List<MatrixValue> values2 = readRFromDisk();
+            if (values2 == null) {
+                return;
+            }
             while (iterator.hasNext()) {
                 MatrixValue next = iterator.next();
                 MatrixValue value = new MatrixValue(next.getMatrix(), next.getIndex(), next.getValue());
-                if (value.getMatrix() == 0) {
-                    values1.add(value);
-                } else {
-                    values2.add(value);
-                }
+                values1.add(value);
             }
             values1.sort((o1, o2) -> Integer.compare(o1.getIndex(), o2.getIndex()));
             int val2Index = 0;
@@ -166,9 +157,46 @@ public class MatrixMultiplication {
             String output = "R," + matrixKey.getI() + "," + matrixKey.getJ() + "," + sum;
             outputCollector.collect(null, new Text(output));
         }
+
+        private ArrayList<MatrixValue> readRFromDisk() {
+            try {
+                ArrayList<MatrixValue> result = new ArrayList<>();
+                FileSystem fileSystem = FileSystem.get(new Configuration());
+                int fileIndex = 0;
+                while (true) {
+                    Path in = new Path(generateFullName(fileIndex));
+                    if (!fileSystem.exists(in)) {
+                        break;
+                    }
+                    BufferedReader reader = new BufferedReader(
+                            new InputStreamReader(fileSystem.open(in))
+                    );
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        String[] tokens = line.split(",");
+                        int index = Integer.parseInt(tokens[1]);
+                        double value = Double.parseDouble(tokens[3]);
+                        result.add(new MatrixValue(1, index, value));
+                    }
+                }
+                return result;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        private String generateFullName(int index) {
+            String indexPart = "";
+            for (int i = 0; i < 5 - Integer.valueOf(index).toString().length(); ++i) {
+                indexPart += "0";
+            }
+            indexPart += index;
+            return "part-" + indexPart;
+        }
     }
 
-    public static void start(String input, String rInput, String output) {
+    public static void start(String input, String output) {
         JobConf jobConf = new JobConf();
         jobConf.setJobName("Matrix Multiplication");
         jobConf.setJarByClass(PageRank.class);
@@ -180,7 +208,7 @@ public class MatrixMultiplication {
         jobConf.setReducerClass(MatrixReducer.class);
         jobConf.setInputFormat(TextInputFormat.class);
         jobConf.setOutputFormat(TextOutputFormat.class);
-        FileInputFormat.setInputPaths(jobConf, new Path(input), new Path(rInput));
+        FileInputFormat.setInputPaths(jobConf, new Path(input));
         FileOutputFormat.setOutputPath(jobConf, new Path(output));
         try {
             JobClient.runJob(jobConf);
