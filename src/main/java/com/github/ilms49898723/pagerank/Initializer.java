@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 
 public class Initializer {
-    private static final long N = 5;
     public static void start() {
         Path path = new Path("R", "R");
         try {
@@ -17,8 +16,8 @@ public class Initializer {
             BufferedWriter writer = new BufferedWriter(
                     new OutputStreamWriter(fileSystem.create(path, true))
             );
-            for (long i = 1; i <= N; ++i) {
-                writer.write("R," + i + ",1," + ((float) 1 / N) + "\n");
+            for (long i = 1; i <= PageRank.N; ++i) {
+                writer.write("R," + i + ",1," + ((float) 1 / PageRank.N) + "\n");
             }
             writer.close();
         } catch (IOException e) {

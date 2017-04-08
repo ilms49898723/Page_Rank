@@ -5,6 +5,7 @@ import org.apache.hadoop.util.GenericOptionsParser;
 import java.io.IOException;
 
 public class PageRank {
+    public static final long N = 5;
 
     public void start(String[] args) {
         try {
@@ -16,6 +17,7 @@ public class PageRank {
             Cleaner.start(args[1]);
             Initializer.start();
             MatrixParser.start(args[0], "matrixparse");
+            MatrixMultiplication.start();
         } catch (IOException e) {
             e.printStackTrace();
         }
