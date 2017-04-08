@@ -7,6 +7,7 @@ import org.apache.hadoop.fs.Path;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.math.BigDecimal;
 
 public class Initializer {
     public static void start(String output) {
@@ -17,8 +18,7 @@ public class Initializer {
                     new OutputStreamWriter(fileSystem.create(path, true))
             );
             for (int i = 0; i < PageRank.N; ++i) {
-                double value = 1.0 / PageRank.N;
-                value = ((double) ((int) (value * 1e6))) / 1e6;
+                BigDecimal value = new BigDecimal(1.0 / PageRank.N);
                 writer.write("R," + i + ",0," + value + "\n");
             }
             writer.close();
