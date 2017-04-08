@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class PageRank {
     public static final int N = 5;
-    public static final int ROUND = 1;
+    public static final int ROUND = 10;
     public static final double BETA = 0.8;
 
     public static void start(String[] args) {

@@ -71,13 +71,8 @@ public class RankUpdater {
                 values.add(new MatrixValue(i, j, v));
                 sum += v;
             }
-            if (sum > 0) {
-                throw new IOException("sum " + sum);
-            }
             for (MatrixValue value : values) {
-                double newValue = value.getValue();
-                newValue = newValue + (1.0 - sum) / PageRank.N;
-                value.setValue(newValue);
+                value.setValue(value.getValue() + (1.0 - sum) / PageRank.N);
                 String output = "R," + value.getI() + "," + value.getJ() + "," + value.getValue();
                 outputCollector.collect(null, new Text(output));
             }
