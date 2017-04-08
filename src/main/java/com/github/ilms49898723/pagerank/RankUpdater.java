@@ -72,6 +72,7 @@ public class RankUpdater {
                 sum += v;
             }
             for (MatrixValue value : values) {
+                value.setValue(value.getValue() + (1 - sum) / PageRank.N);
                 String output = "R," + value.getI() + "," + value.getJ() + "," + value.getValue();
                 outputCollector.collect(null, new Text(output));
             }
