@@ -10,7 +10,7 @@ import java.io.OutputStreamWriter;
 
 public class Initializer {
     public static void start(String output) {
-        Path path = new Path(output, output);
+        Path path = new Path(output, "part-00000");
         try {
             FileSystem fileSystem = FileSystem.get(new Configuration());
             BufferedWriter writer = new BufferedWriter(

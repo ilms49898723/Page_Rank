@@ -130,14 +130,18 @@ public class MatrixMultiplication {
     private static class MatrixReducer
             extends MapReduceBase
             implements Reducer<MatrixKey, MatrixValue, ObjectWritable, Text> {
+        private ArrayList<MatrixValue> mRankValues;
+
+        public MatrixReducer() {
+            super();
+            mRankValues = readRFromDisk();
+        }
+
         @Override
         public void reduce(MatrixKey matrixKey, Iterator<MatrixValue> iterator, OutputCollector<ObjectWritable, Text> outputCollector, Reporter reporter) throws IOException {
             double sum = 0.0;
             List<MatrixValue> values1 = new ArrayList<>();
-            List<MatrixValue> values2 = readRFromDisk();
-            if (values2 == null || values2.size() != PageRank.N) {
-                throw new IOException("Failed on reading R from disk!");
-            }
+            List<MatrixValue> values2 = mRankValues != null ? mRankValues : readRFromDisk();
             while (iterator.hasNext()) {
                 MatrixValue next = iterator.next();
                 MatrixValue value = new MatrixValue(next.getMatrix(), next.getIndex(), next.getValue());
