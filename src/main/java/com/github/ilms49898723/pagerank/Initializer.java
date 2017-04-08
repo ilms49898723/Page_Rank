@@ -18,12 +18,11 @@ public class Initializer {
                     new OutputStreamWriter(fileSystem.create(path, true))
             );
             for (long i = 1; i <= N; ++i) {
-                writer.write("N," + i + ",1," + ((float) 1 / N) + "\n");
+                writer.write("R," + i + ",1," + ((float) 1 / N) + "\n");
             }
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 }

@@ -40,9 +40,10 @@ public class MatrixParser {
                 IntWritable value = new IntWritable(iterator.next().get());
                 values.add(value.toString());
             }
-            String prefix = intWritable.get() + "," + values.size() + ",";
-            Text output = new Text(prefix + String.join(",", values));
-            outputCollector.collect(null, output);
+            for (String val : values) {
+                Text output = new Text("M," + val + "," + intWritable.get() + "," + ((float) 1 / values.size()));
+                outputCollector.collect(null, output);
+            }
         }
     }
 
