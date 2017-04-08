@@ -141,23 +141,23 @@ public class MatrixMultiplication {
         @Override
         public void reduce(MatrixKey matrixKey, Iterator<MatrixValue> iterator, OutputCollector<ObjectWritable, Text> outputCollector, Reporter reporter) throws IOException {
             double sum = 0.0;
-            String out = "";
             List<MatrixValue> values = new ArrayList<>();
             while (iterator.hasNext()) {
                 MatrixValue next = iterator.next();
                 MatrixValue value = new MatrixValue(next.getMatrix(), next.getIndex(), next.getValue());
                 values.add(value);
-                out += value;
             }
-            if (matrixKey.getI() == 1) {
-                throw new IOException(out);
-            }
+            String out = "";
             for (MatrixValue i : values) {
                 for (MatrixValue j : values) {
                     if (i.getMatrix() != j.getMatrix() && i.getIndex() == j.getIndex()) {
+                        out += i.getValue() + "*" + j.getValue() + "\n";
                         sum += i.getValue() * j.getValue();
                     }
                 }
+            }
+            if (matrixKey.getI() == 1) {
+                throw new IOException(out);
             }
             String output = "R," + matrixKey.getI() + "," + matrixKey.getJ() + "," + sum;
             outputCollector.collect(null, new Text(output));
