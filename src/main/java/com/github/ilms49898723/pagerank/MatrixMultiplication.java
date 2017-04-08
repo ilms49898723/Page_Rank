@@ -134,7 +134,7 @@ public class MatrixMultiplication {
 
         public MatrixReducer() {
             super();
-            mRankValues = readRFromDisk();
+//            mRankValues = readRFromDisk();
         }
 
         @Override
@@ -163,33 +163,28 @@ public class MatrixMultiplication {
             outputCollector.collect(null, new Text(output));
         }
 
-        private ArrayList<MatrixValue> readRFromDisk() {
-            try {
-                ArrayList<MatrixValue> result = new ArrayList<>();
-                FileSystem fileSystem = FileSystem.get(new Configuration());
-                int fileIndex = 0;
-                while (fileIndex < 1) {
-                    Path in = new Path("R", "part-00000");
+        private ArrayList<MatrixValue> readRFromDisk() throws IOException {
+            ArrayList<MatrixValue> result = new ArrayList<>();
+            FileSystem fileSystem = FileSystem.get(new Configuration());
+            int fileIndex = 0;
+            while (fileIndex < 1) {
+                Path in = new Path("R", "part-00000");
 //                    if (!fileSystem.exists(in)) {
 //                        break;
 //                    }
-                    BufferedReader reader = new BufferedReader(
-                            new InputStreamReader(fileSystem.open(in))
-                    );
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        String[] tokens = line.split(",");
-                        int index = Integer.parseInt(tokens[1]);
-                        double value = Double.parseDouble(tokens[3]);
-                        result.add(new MatrixValue(1, index, value));
-                    }
-                    ++fileIndex;
+                BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(fileSystem.open(in))
+                );
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    String[] tokens = line.split(",");
+                    int index = Integer.parseInt(tokens[1]);
+                    double value = Double.parseDouble(tokens[3]);
+                    result.add(new MatrixValue(1, index, value));
                 }
-                return result;
-            } catch (IOException e) {
-                e.printStackTrace();
+                ++fileIndex;
             }
-            return null;
+            return result;
         }
 
         private String generateFullName(int index) {
