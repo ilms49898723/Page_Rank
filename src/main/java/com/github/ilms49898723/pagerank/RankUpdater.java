@@ -74,6 +74,9 @@ public class RankUpdater {
             }
             for (MatrixValue value : values) {
                 BigDecimal newValue = new BigDecimal(value.getValue());
+                if (newValue.compareTo(new BigDecimal("-1.0")) < 0) {
+                    throw new IOException("value goes negative");
+                }
                 newValue = newValue.add(new BigDecimal(1.0).subtract(sum).divide(new BigDecimal(PageRank.N), BigDecimal.ROUND_HALF_EVEN));
                 value.setValue(newValue.toString());
                 String output = "R," + value.getI() + "," + value.getJ() + "," + value.getValue();
