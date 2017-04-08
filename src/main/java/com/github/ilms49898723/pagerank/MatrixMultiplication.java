@@ -160,9 +160,9 @@ public class MatrixMultiplication {
                 }
             }
             sum = PageRank.BETA * sum + (1.0 - PageRank.BETA) / PageRank.N;
-            if (matrixKey.getI() == 1) {
-                throw new IOException(String.valueOf(sum));
-            }
+//            if (matrixKey.getI() == 1) {
+//                throw new IOException(String.valueOf(sum));
+//            }
             String output = "R," + matrixKey.getI() + "," + matrixKey.getJ() + "," + sum;
             outputCollector.collect(null, new Text(output));
         }

@@ -71,6 +71,9 @@ public class RankUpdater {
                 values.add(new MatrixValue(i, j, v));
                 sum += v;
             }
+            if (sum > 0) {
+                throw new IOException("sum " + sum);
+            }
             for (MatrixValue value : values) {
                 double newValue = value.getValue();
                 newValue = newValue + (1.0 - sum) / PageRank.N;
