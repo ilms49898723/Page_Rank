@@ -11,8 +11,10 @@ public class Cleaner {
         try {
             FileSystem fileSystem = FileSystem.get(new Configuration());
             fileSystem.delete(new Path(output), true);
+            fileSystem.delete(new Path("/user/root/prematrix"), true);
             fileSystem.delete(new Path("/user/root/matrixparse"), true);
             fileSystem.delete(new Path("/user/root/matrixmul"), true);
+            fileSystem.delete(new Path("/user/root/mapping"), true);
             fileSystem.delete(new Path("/user/root/R"), true);
         } catch (IOException e) {
             e.printStackTrace();

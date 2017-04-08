@@ -8,7 +8,7 @@ public class PageRank {
     public static final long N = 5;
     public static final int ROUND = 10;
 
-    public void start(String[] args) {
+    public static void start(String[] args) {
         try {
             String[] otherArgs = new GenericOptionsParser(args).getRemainingArgs();
             if (otherArgs.length != 2) {
@@ -17,8 +17,9 @@ public class PageRank {
             }
             Cleaner.start(args[1]);
             Initializer.start();
+            InputPreProcessor.start(args[0], "prematrix", "mapping");
             // in: args[0]; out: matrixparse
-            MatrixParser.start(args[0], "matrixparse");
+            MatrixParser.start("prematrix", "matrixparse");
             for (int i = 0; i < ROUND; ++i) {
                 // in: matrixparse, R; out: matrixmul
                 MatrixMultiplication.start();
