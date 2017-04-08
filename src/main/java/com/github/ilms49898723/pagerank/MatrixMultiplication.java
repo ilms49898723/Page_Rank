@@ -156,7 +156,7 @@ public class MatrixMultiplication {
                     }
                 }
             }
-            sum = sum * 0.8 + 0.2 / PageRank.N;
+            sum = sum * PageRank.BETA + (1 - PageRank.BETA) / PageRank.N;
             String output = "R," + matrixKey.getI() + "," + matrixKey.getJ() + "," + sum;
             outputCollector.collect(null, new Text(output));
         }

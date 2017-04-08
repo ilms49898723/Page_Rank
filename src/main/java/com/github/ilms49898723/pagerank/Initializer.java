@@ -16,7 +16,7 @@ public class Initializer {
             BufferedWriter writer = new BufferedWriter(
                     new OutputStreamWriter(fileSystem.create(path, true))
             );
-            for (long i = 0; i < PageRank.N; ++i) {
+            for (int i = 0; i < PageRank.N; ++i) {
                 writer.write("R," + i + ",0," + ((double) 1 / PageRank.N) + "\n");
             }
             writer.close();
