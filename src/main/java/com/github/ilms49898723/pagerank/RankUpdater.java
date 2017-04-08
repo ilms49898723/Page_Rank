@@ -78,6 +78,9 @@ public class RankUpdater {
                     throw new IOException("value goes negative");
                 }
                 newValue = newValue.add(new BigDecimal(1.0).subtract(sum).divide(new BigDecimal(PageRank.N), BigDecimal.ROUND_HALF_EVEN));
+                if (newValue.compareTo(new BigDecimal("-1.0")) < 0) {
+                    throw new IOException("value goes negative 2");
+                }
                 value.setValue(newValue.toString());
                 String output = "R," + value.getI() + "," + value.getJ() + "," + value.getValue();
                 outputCollector.collect(null, new Text(output));
