@@ -168,7 +168,7 @@ public class MatrixMultiplication {
             FileSystem fileSystem = FileSystem.get(new Configuration());
             int fileIndex = 0;
             while (fileIndex < 1) {
-                Path in = new Path("R", "part-00000");
+                Path in = new Path("hdfs:R", "part-00000");
 //                    if (!fileSystem.exists(in)) {
 //                        break;
 //                    }
