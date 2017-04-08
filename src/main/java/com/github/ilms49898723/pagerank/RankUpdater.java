@@ -7,6 +7,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapred.*;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -15,15 +16,15 @@ public class RankUpdater {
     private static class MatrixValue {
         private int mI;
         private int mJ;
-        private double mValue;
+        private String mValue;
 
         public MatrixValue() {
             mI = -1;
             mJ = -1;
-            mValue = -1;
+            mValue = "-1";
         }
 
-        public MatrixValue(int i, int j, double v) {
+        public MatrixValue(int i, int j, String v) {
             mI = i;
             mJ = j;
             mValue = v;
@@ -37,11 +38,11 @@ public class RankUpdater {
             return mJ;
         }
 
-        public double getValue() {
+        public String getValue() {
             return mValue;
         }
 
-        public void setValue(double value) {
+        public void setValue(String value) {
             mValue = value;
         }
     }
@@ -61,18 +62,20 @@ public class RankUpdater {
         @Override
         public void reduce(IntWritable intWritable, Iterator<Text> iterator, OutputCollector<ObjectWritable, Text> outputCollector, Reporter reporter) throws IOException {
             List<MatrixValue> values = new ArrayList<>();
-            double sum = 0.0;
+            BigDecimal sum = new BigDecimal("0.0");
             while (iterator.hasNext()) {
                 String data = new Text(iterator.next()).toString();
                 String[] tokens = data.split(",");
                 int i = Integer.parseInt(tokens[1]);
                 int j = Integer.parseInt(tokens[2]);
-                double v = Double.parseDouble(tokens[3]);
+                String v = tokens[3];
                 values.add(new MatrixValue(i, j, v));
-                sum += v;
+                sum = sum.add(new BigDecimal(v));
             }
             for (MatrixValue value : values) {
-                value.setValue(value.getValue() + (1.0 - sum) / PageRank.N);
+                BigDecimal newValue = new BigDecimal(value.getValue());
+                newValue = newValue.add(new BigDecimal(1.0).subtract(sum).divide(new BigDecimal(PageRank.N), BigDecimal.ROUND_HALF_EVEN));
+                value.setValue(newValue.toString());
                 String output = "R," + value.getI() + "," + value.getJ() + "," + value.getValue();
                 outputCollector.collect(null, new Text(output));
             }
