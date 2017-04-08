@@ -14,7 +14,7 @@ public class PageRank {
                 System.exit(1);
             }
             Cleaner.start(args[1]);
-            MatrixParser.start(args[0]);
+            MatrixParser.start(args[0], "matrixparse");
         } catch (IOException e) {
             e.printStackTrace();
         }

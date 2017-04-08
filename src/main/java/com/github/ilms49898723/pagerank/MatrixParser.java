@@ -46,7 +46,7 @@ public class MatrixParser {
         }
     }
 
-    public static void start(String input) {
+    public static void start(String input, String output) {
         JobConf jobConf = new JobConf();
         jobConf.setJobName("Matrix Parse");
         jobConf.setJarByClass(PageRank.class);
@@ -59,7 +59,7 @@ public class MatrixParser {
         jobConf.setInputFormat(TextInputFormat.class);
         jobConf.setOutputFormat(TextOutputFormat.class);
         FileInputFormat.setInputPaths(jobConf, new Path(input));
-        FileOutputFormat.setOutputPath(jobConf, new Path("matrixparse"));
+        FileOutputFormat.setOutputPath(jobConf, new Path(output));
         try {
             JobClient.runJob(jobConf);
         } catch (IOException e) {
