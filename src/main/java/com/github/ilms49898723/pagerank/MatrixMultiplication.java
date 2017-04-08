@@ -7,6 +7,7 @@ import org.apache.hadoop.mapred.*;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -58,15 +59,15 @@ public class MatrixMultiplication {
     private static class MatrixValue implements Writable {
         private int mMatrix;
         private int mIndex;
-        private double mValue;
+        private String mValue;
 
         public MatrixValue() {
             mMatrix = -1;
             mIndex = -1;
-            mValue = -1;
+            mValue = "-1";
         }
 
-        public MatrixValue(int matrix, int index, double value) {
+        public MatrixValue(int matrix, int index, String value) {
             mMatrix = matrix;
             mIndex = index;
             mValue = value;
@@ -80,7 +81,7 @@ public class MatrixMultiplication {
             return mIndex;
         }
 
-        public double getValue() {
+        public String getValue() {
             return mValue;
         }
 
@@ -88,14 +89,14 @@ public class MatrixMultiplication {
         public void write(DataOutput out) throws IOException {
             out.writeInt(mMatrix);
             out.writeInt(mIndex);
-            out.writeDouble(mValue);
+            out.writeUTF(mValue);
         }
 
         @Override
         public void readFields(DataInput in) throws IOException {
             mMatrix = in.readInt();
             mIndex = in.readInt();
-            mValue = in.readDouble();
+            mValue = in.readUTF();
         }
 
         @Override
@@ -117,7 +118,7 @@ public class MatrixMultiplication {
             int matrix = (tokens[0].equalsIgnoreCase("m")) ? 0 : 1;
             int i = Integer.parseInt(tokens[1]);
             int j = Integer.parseInt(tokens[2]);
-            double v = Double.parseDouble(tokens[3]);
+            String v = tokens[3];
             if (matrix == 0) {
                 MatrixKey key = new MatrixKey(i, 0);
                 MatrixValue value = new MatrixValue(matrix, j, v);
@@ -137,7 +138,7 @@ public class MatrixMultiplication {
             implements Reducer<MatrixKey, MatrixValue, ObjectWritable, Text> {
         @Override
         public void reduce(MatrixKey matrixKey, Iterator<MatrixValue> iterator, OutputCollector<ObjectWritable, Text> outputCollector, Reporter reporter) throws IOException {
-            double sum = 0.0;
+            BigDecimal sum = new BigDecimal(0.0);
             List<MatrixValue> values1 = new ArrayList<>();
             List<MatrixValue> values2 = new ArrayList<>();
             while (iterator.hasNext()) {
@@ -152,11 +153,13 @@ public class MatrixMultiplication {
             for (MatrixValue value1 : values1) {
                 for (MatrixValue value2 : values2) {
                     if (value1.getIndex() == value2.getIndex()) {
-                        sum += value1.getValue() * value2.getValue();
+                        BigDecimal left = new BigDecimal(value1.getValue());
+                        BigDecimal right = new BigDecimal(value2.getValue());
+                        sum = sum.add(left.multiply(right));
                     }
                 }
             }
-            sum = sum * PageRank.BETA + (1 - PageRank.BETA) / PageRank.N;
+            sum = sum.multiply(new BigDecimal("0.8")).add(new BigDecimal((1 - PageRank.BETA) / PageRank.N));
             String output = "R," + matrixKey.getI() + "," + matrixKey.getJ() + "," + sum;
             outputCollector.collect(null, new Text(output));
         }
