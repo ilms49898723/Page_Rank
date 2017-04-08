@@ -20,7 +20,7 @@ public class RankUpdater {
         public MatrixValue() {
             mI = -1;
             mJ = -1;
-            mValue = -1.0;
+            mValue = -1;
         }
 
         public MatrixValue(int i, int j, double v) {

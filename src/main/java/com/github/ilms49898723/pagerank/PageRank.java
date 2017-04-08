@@ -5,15 +5,15 @@ import org.apache.hadoop.util.GenericOptionsParser;
 import java.io.IOException;
 
 public class PageRank {
-    public static int N = 10876;
-    public static int ROUND = 1;
-    public static double BETA = 0.8;
+    public static final int N = 10876;
+    public static final int ROUND = 1;
+    public static final double BETA = 0.8;
 
     public static void start(String[] args) {
         try {
             String[] otherArgs = new GenericOptionsParser(args).getRemainingArgs();
-            if (otherArgs.length != 2) {
-                System.err.println("Usage: pagerank <in> <out>");
+            if (otherArgs.length < 2) {
+                System.err.println("Usage: pagerank <in> <out> [round | round #nodes]");
                 System.exit(1);
             }
             Cleaner.start(args[1]);
@@ -24,7 +24,7 @@ public class PageRank {
                 MatrixMultiplication.start("matrixparse", "R", "matrixmul");
                 Cleaner.remove("R");
                 RankUpdater.start("matrixmul", "R");
-//                Cleaner.remove("matrixmul");
+                Cleaner.remove("matrixmul");
             }
             OutputPostProcessor.start("R", args[1], "mapping");
         } catch (IOException e) {

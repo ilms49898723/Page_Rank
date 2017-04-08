@@ -17,8 +17,7 @@ public class Initializer {
                     new OutputStreamWriter(fileSystem.create(path, true))
             );
             for (int i = 0; i < PageRank.N; ++i) {
-                double value = 1.0 / PageRank.N;
-                writer.write("R," + i + ",0," + value + "\n");
+                writer.write("R," + i + ",0," + ((double) 1 / PageRank.N) + "\n");
             }
             writer.close();
         } catch (IOException e) {
