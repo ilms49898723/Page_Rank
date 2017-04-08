@@ -135,8 +135,8 @@ public class MatrixMultiplication {
             double sum = 0.0;
             List<MatrixValue> values1 = new ArrayList<>();
             List<MatrixValue> values2 = readRFromDisk();
-            if (values2 == null) {
-                return;
+            if (values2 == null || values2.size() != PageRank.N) {
+                throw new IOException("Failed on reading R from disk!");
             }
             while (iterator.hasNext()) {
                 MatrixValue next = iterator.next();
@@ -144,6 +144,7 @@ public class MatrixMultiplication {
                 values1.add(value);
             }
             values1.sort((o1, o2) -> Integer.compare(o1.getIndex(), o2.getIndex()));
+            values2.sort((o1, o2) -> Integer.compare(o1.getIndex(), o2.getIndex()));
             int val2Index = 0;
             for (MatrixValue value1 : values1) {
                 while (values2.get(val2Index).getIndex() < value1.getIndex()) {
