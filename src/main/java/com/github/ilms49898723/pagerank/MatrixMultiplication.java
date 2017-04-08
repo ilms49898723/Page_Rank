@@ -97,6 +97,15 @@ public class MatrixMultiplication {
             mIndex = in.readInt();
             mValue = in.readDouble();
         }
+
+        @Override
+        public String toString() {
+            return "MatrixValue{" +
+                    "mMatrix=" + mMatrix +
+                    ", mIndex=" + mIndex +
+                    ", mValue=" + mValue +
+                    '}';
+        }
     }
 
     private static class MatrixMapper
