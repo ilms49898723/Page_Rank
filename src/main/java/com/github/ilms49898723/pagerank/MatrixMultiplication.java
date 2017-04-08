@@ -122,7 +122,7 @@ public class MatrixMultiplication {
             int j = Integer.parseInt(tokens[2]);
             double v = Double.parseDouble(tokens[3]);
             if (matrix == 0) {
-                MatrixKey key = new MatrixKey(i, 1);
+                MatrixKey key = new MatrixKey(i, 0);
                 MatrixValue value = new MatrixValue(matrix, j, v);
                 outputCollector.collect(key, value);
             } else {

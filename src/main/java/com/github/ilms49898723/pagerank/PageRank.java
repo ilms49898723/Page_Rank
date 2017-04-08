@@ -29,6 +29,7 @@ public class PageRank {
                 RankUpdater.start();
                 Cleaner.remove("matrixmul");
             }
+            OutputPostProcessor.start("R", "final", "mapping");
         } catch (IOException e) {
             e.printStackTrace();
         }
