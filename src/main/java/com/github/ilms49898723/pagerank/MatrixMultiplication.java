@@ -84,9 +84,10 @@ public class MatrixMultiplication {
                 }
             } else {
                 int to = Integer.parseInt(tokens[1]);
-                for (int i = 3; i < tokens.length; i += 2) {
-                    int index = Integer.parseInt(tokens[i]);
-                    double value = Double.parseDouble(tokens[i + 1]);
+                int pairs = Integer.parseInt(tokens[2]);
+                for (int i = 0; i < pairs; ++i) {
+                    int index = Integer.parseInt(tokens[3 + i * 2]);
+                    double value = Double.parseDouble(tokens[3 + i * 2 + 1]);
                     IntWritable matrixIndex = new IntWritable(to);
                     MatrixValue matrixValue = new MatrixValue(1, index, value);
                     outputCollector.collect(matrixIndex, matrixValue);
