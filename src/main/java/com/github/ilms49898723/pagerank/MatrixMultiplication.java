@@ -101,6 +101,12 @@ public class MatrixMultiplication {
                     values2.put(next.getIndex(), next.getValue());
                 }
             }
+            if (intWritable.get() == 4) {
+                String message = "";
+                message += values1;
+                message += values2.keySet().toString();
+                throw new IOException(message);
+            }
             double sum = 0.0;
             for (MatrixValue val1 : values1) {
                 sum += val1.getValue() * values2.get(val1.getIndex());
