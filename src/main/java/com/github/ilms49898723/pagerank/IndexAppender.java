@@ -48,7 +48,9 @@ public class IndexAppender {
                     values.add(str);
                 }
             }
-            output.append(",").append(String.join(",", values));
+            if (values.size() > 0) {
+                output.append(",").append(String.join(",", values));
+            }
             outputCollector.collect(null, new Text(output.toString()));
         }
     }

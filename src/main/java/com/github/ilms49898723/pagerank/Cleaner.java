@@ -18,7 +18,7 @@ public class Cleaner {
             fileSystem.delete(new Path("/user/root/mapping"), true);
             fileSystem.delete(new Path("/user/root/indices"), true);
             fileSystem.delete(new Path("/user/root/R"), true);
-            fileSystem.delete(new Path("/user/root/Rout"), true);
+            fileSystem.delete(new Path("/user/root/Rindex"), true);
         } catch (IOException e) {
             e.printStackTrace();
         }

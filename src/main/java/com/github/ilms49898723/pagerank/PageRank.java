@@ -22,12 +22,13 @@ public class PageRank {
             MatrixParser.start("prematrix", "matrixparse");
             MatrixTrans.start("matrixparse", "matrixtrans");
             IndexParser.start("matrixparse", "indices");
-            IndexAppender.start("indices", "R", "Rout");
             for (int i = 0; i < ROUND; ++i) {
-                MatrixMultiplication.start("matrixtrans", "R", "matrixmul");
+                Cleaner.remove("Rindex");
+                IndexAppender.start("indices", "R", "Rindex");
+                Cleaner.remove("matrixmul");
+                MatrixMultiplication.start("matrixtrans", "Rindex", "matrixmul");
                 Cleaner.remove("R");
                 RankUpdater.start("matrixmul", "R");
-                Cleaner.remove("matrixmul");
             }
             OutputPostProcessor.start("R", args[1], "mapping");
         } catch (IOException e) {
