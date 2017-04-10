@@ -61,6 +61,10 @@ public class RankUpdater {
         @Override
         public void reduce(IntWritable intWritable, Iterator<Text> iterator, OutputCollector<ObjectWritable, Text> outputCollector, Reporter reporter) throws IOException {
             List<MatrixValue> values = new ArrayList<>();
+            boolean[] exists = new boolean[PageRank.N];
+            for (int i = 0; i < PageRank.N; ++i) {
+                exists[i] = false;
+            }
             double sum = 0.0;
             while (iterator.hasNext()) {
                 String data = new Text(iterator.next()).toString();
@@ -68,8 +72,14 @@ public class RankUpdater {
                 int i = Integer.parseInt(tokens[1]);
                 int j = Integer.parseInt(tokens[2]);
                 double v = Double.parseDouble(tokens[3]);
+                exists[i] = true;
                 values.add(new MatrixValue(i, j, v));
                 sum += v;
+            }
+            for (int i = 0; i < PageRank.N; ++i) {
+                if (!exists[i]) {
+                    values.add(new MatrixValue(i, 0, 0.0));
+                }
             }
             for (MatrixValue value : values) {
                 value.setValue(value.getValue() + (1.0 - sum) / PageRank.N);
