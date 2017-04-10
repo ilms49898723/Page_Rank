@@ -16,7 +16,9 @@ public class Cleaner {
             fileSystem.delete(new Path("/user/root/matrixtrans"), true);
             fileSystem.delete(new Path("/user/root/matrixmul"), true);
             fileSystem.delete(new Path("/user/root/mapping"), true);
+            fileSystem.delete(new Path("/user/root/indices"), true);
             fileSystem.delete(new Path("/user/root/R"), true);
+            fileSystem.delete(new Path("/user/root/Rout"), true);
         } catch (IOException e) {
             e.printStackTrace();
         }
