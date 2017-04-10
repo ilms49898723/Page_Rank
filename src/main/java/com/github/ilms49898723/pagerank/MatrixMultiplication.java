@@ -56,6 +56,15 @@ public class MatrixMultiplication {
             mIndex = in.readInt();
             mValue = in.readDouble();
         }
+
+        @Override
+        public String toString() {
+            return "MatrixValue{" +
+                    "mMatrix=" + mMatrix +
+                    ", mIndex=" + mIndex +
+                    ", mValue=" + mValue +
+                    '}';
+        }
     }
 
     private static class MatrixMapper
@@ -103,8 +112,10 @@ public class MatrixMultiplication {
             }
             if (intWritable.get() == 4) {
                 String message = "";
-                message += values1;
-                message += values2.keySet().toString();
+                message += values1 + "\n";
+                for (int key : values2.keySet()) {
+                    message += "(" + key + "," + values2.get(key) + ")";
+                }
                 throw new IOException(message);
             }
             double sum = 0.0;
