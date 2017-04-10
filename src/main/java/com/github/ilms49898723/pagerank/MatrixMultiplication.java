@@ -86,7 +86,7 @@ public class MatrixMultiplication {
                 int to = Integer.parseInt(tokens[1]);
                 int pairs = Integer.parseInt(tokens[2]);
                 if (tokens.length != 3 + 2 * pairs) {
-                    throw new IOException("Error, token len " + tokens.length + ", pairs = " + pairs + "\n");
+                    throw new IOException("Error, token len " + tokens.length + ", pairs = " + pairs + " ori " + text.toString() + "\n");
                 }
                 for (int i = 0; i < pairs; ++i) {
                     int index = Integer.parseInt(tokens[3 + i * 2]);
