@@ -122,6 +122,7 @@ public class MatrixMultiplication {
             for (MatrixValue val1 : values1) {
                 sum += val1.getValue() * values2.get(val1.getIndex());
             }
+            sum = PageRank.BETA * sum + (1 - PageRank.BETA) / PageRank.N;
             String output = "R," + intWritable.toString() + ",0," + sum;
             outputCollector.collect(null, new Text(output));
         }
