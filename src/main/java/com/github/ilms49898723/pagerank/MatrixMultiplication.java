@@ -110,14 +110,6 @@ public class MatrixMultiplication {
                     values2.put(next.getIndex(), next.getValue());
                 }
             }
-            if (intWritable.get() == 4) {
-                String message = "";
-                message += values1 + "\n";
-                for (int key : values2.keySet()) {
-                    message += "(" + key + "," + values2.get(key) + ")";
-                }
-                throw new IOException(message);
-            }
             double sum = 0.0;
             for (MatrixValue val1 : values1) {
                 sum += val1.getValue() * values2.get(val1.getIndex());
