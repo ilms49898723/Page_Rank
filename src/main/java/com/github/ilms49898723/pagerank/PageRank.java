@@ -13,7 +13,7 @@ public class PageRank {
         try {
             String[] otherArgs = new GenericOptionsParser(args).getRemainingArgs();
             if (otherArgs.length < 2) {
-                System.err.println("Usage: pagerank <in> <out> [round | round #nodes]");
+                System.err.println("Usage: pagerank <in> <out>");
                 System.exit(1);
             }
             Cleaner.start(args[1]);
@@ -21,6 +21,7 @@ public class PageRank {
             InputPreProcessor.start(args[0], "prematrix", "mapping");
             MatrixParser.start("prematrix", "matrixparse");
             MatrixTrans.start("matrixparse", "matrixtrans");
+            IndexParser.start("matrixparse", "indices");
             for (int i = 0; i < ROUND; ++i) {
                 MatrixMultiplication.start("matrixtrans", "R", "matrixmul");
                 Cleaner.remove("R");
