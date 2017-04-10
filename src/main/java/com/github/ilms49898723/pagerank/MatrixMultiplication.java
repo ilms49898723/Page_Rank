@@ -105,7 +105,7 @@ public class MatrixMultiplication {
             for (MatrixValue val1 : values1) {
                 sum += val1.getValue() * values2.get(val1.getIndex());
             }
-            String output = "R," + intWritable.toString() + "," + sum;
+            String output = "R," + intWritable.toString() + ",0," + sum;
             outputCollector.collect(null, new Text(output));
         }
     }
